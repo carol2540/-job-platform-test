@@ -1,22 +1,16 @@
 import Link from 'next/link'
 import React from 'react'
-import LogoImage from '@/public/images/logo.png'
-import Image from 'next/image'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/Auth'
 import User from '../Helpers/User'
 
 const Nav = async () => {
     const session = await getServerSession(authOptions)
-    console.log(session)
     return (
         <div className='h-[13vh] shadow-md'>
             <div className='w-[90%] md-[80%] h-full mx-auto flex items-center justify-between'>
-                {/* logo + brand name */}
-                <div className='flex items-center gap-3'>
-                    <Link href='/'>
-                        <Image src={LogoImage} alt="Banu Job Platform logo" width={60} height={60} className='w-[50px] h-[50px] md:w-[60px] md:h-[60px] object-contain' />
-                    </Link>
+                {/* Brand name */}
+                <div>
                     <Link href='/'>
                         <span className='text-xl md:text-2xl font-bold text-blue-700 hover:text-blue-900 transition-colors'>
                             Banu Job Platform
