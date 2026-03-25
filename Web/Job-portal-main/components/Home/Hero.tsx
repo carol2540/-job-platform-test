@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import HeroIllustrator from '@/public/images/hero_illustrator.png'
 
 export default function Hero() {
@@ -46,7 +45,7 @@ export default function Hero() {
             </form>
           </div>
           <div className='hidden lg:flex justify-center'>
-            <Image src={HeroIllustrator} alt='hero illustration' width={480} height={300} className='object-contain' />
+            <img src={HeroIllustrator.src} alt='hero illustration' width={480} height={300} className='object-contain' />
           </div>
         </div>
       </div>
