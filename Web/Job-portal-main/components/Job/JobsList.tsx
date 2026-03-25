@@ -50,7 +50,6 @@ export default function JobsList({ jobs, initialSearch = "" }: Props) {
 
   return (
     <div className="mt-12 w-[90%] md:w-[85%] lg:w-[80%] mx-auto mb-12">
-      {/* Search and Filter Bar */}
       <div className="mt-10 mb-8 p-4 md:p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
         <div className="flex items-center gap-2 mb-4">
           <FaFilter className="text-blue-600" />
@@ -102,7 +101,6 @@ export default function JobsList({ jobs, initialSearch = "" }: Props) {
         </div>
       </div>
 
-      {/* Results Count */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold text-gray-800">
           Show Result ({filteredJobs.length})
@@ -114,7 +112,6 @@ export default function JobsList({ jobs, initialSearch = "" }: Props) {
         </h2>
       </div>
 
-      {/* Grid Layout */}
       {filteredJobs.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredJobs.map((job) => (
