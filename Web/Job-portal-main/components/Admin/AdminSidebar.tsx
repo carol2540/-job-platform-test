@@ -57,8 +57,8 @@ export default function AdminSidebar() {
         {navSections.map((section) => {
           const Icon = section.icon
           const isActive =
-            section.href === '/admin/dashboard'
-              ? pathname === '/admin/dashboard' || pathname === '/admin'
+            section.href == '/admin/dashboard'
+              ? pathname == '/admin/dashboard' || pathname == '/admin'
               : pathname.startsWith(section.href)
 
           return (

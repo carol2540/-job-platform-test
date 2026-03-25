@@ -6,7 +6,7 @@ export default async function AdminDashboardPage() {
   const jobs = await getJobs()
 
   const totalJobs = jobs.length
-  const liveJobs = jobs.filter((j) => j.status === 'live').length
+  const liveJobs = jobs.filter((j) => j.status == 'live').length
   const totalApplications = 0
   const thisMonth = new Date().getMonth()
   const thisYear = new Date().getFullYear()
@@ -37,6 +37,20 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+        <Link
+          href="/admin/jobs"
+          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Post a Job
+        </Link>
+      </div>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard
           label="Total Jobs"

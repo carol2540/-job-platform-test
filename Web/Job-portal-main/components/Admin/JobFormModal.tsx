@@ -38,15 +38,15 @@ export default function JobFormModal({ job, onClose, onSave }: Props) {
       setForm({
         title: job.title,
         company: job.company,
-        image: job.image ?? '',
-        salary: job.salary ?? '',
+        image: job.image,
+        salary: job.salary,
         location: job.location,
         jobtype: job.jobtype,
         description: job.description,
         tags: job.tags,
         status: job.status,
-        startLiveDate: job.startLiveDate ?? '',
-        applicationDeadline: job.applicationDeadline ?? '',
+        startLiveDate: job.startLiveDate || '',
+        applicationDeadline: job.applicationDeadline || '',
       })
       setTagsInput(job.tags.join(', '))
     }
@@ -185,7 +185,7 @@ export default function JobFormModal({ job, onClose, onSave }: Props) {
             <Field label="Start Live Date">
               <input
                 type="date"
-                value={form.startLiveDate ?? ''}
+                value={form.startLiveDate || ''}
                 onChange={(e) => setForm((f) => ({ ...f, startLiveDate: e.target.value }))}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
@@ -193,7 +193,7 @@ export default function JobFormModal({ job, onClose, onSave }: Props) {
             <Field label="Application Deadline">
               <input
                 type="date"
-                value={form.applicationDeadline ?? ''}
+                value={form.applicationDeadline || ''}
                 onChange={(e) => setForm((f) => ({ ...f, applicationDeadline: e.target.value }))}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
@@ -203,7 +203,7 @@ export default function JobFormModal({ job, onClose, onSave }: Props) {
           <Field label="Company Logo URL">
             <input
               type="text"
-              value={form.image ?? ''}
+              value={form.image || ''}
               onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               placeholder="/images/c1.png"
