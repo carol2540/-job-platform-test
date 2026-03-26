@@ -1,58 +1,72 @@
 "use client"
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import React, { useState, useEffect } from 'react'
+import { signIn, useSession } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import signupImage from '@/public/images/chair.jpg'
 import Image from 'next/image'
-import { signIn } from 'next-auth/react'
 
-export default function SignUp() {
+export default function SignInPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { data: session, status } = useSession()
+  const callbackUrl = searchParams.get('callbackUrl') || '/'
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [fullName, setFullName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  useEffect(() => {
+    if (status === 'authenticated') {
+      const isAdmin = (session?.user as { isAdmin?: boolean })?.isAdmin
+      router.push(isAdmin ? '/admin/dashboard' : '/')
+    }
+  }, [status, session, router])
+
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    setSuccess('')
     setLoading(true)
 
-    if (!supabase) {
-      setLoading(false)
-      setError('Authentication service unavailable. Please try again later.')
-      return
-    }
-
-    const { error } = await supabase.auth.signUp({
+    const result = await signIn('credentials', {
       email,
       password,
-      options: {
-        data: { full_name: fullName },
-      },
+      redirect: false,
+      callbackUrl,
     })
 
     setLoading(false)
 
-    if (error) {
-      setError(error.message)
-    } else {
-      setSuccess('Account created! Check your email to confirm your account, then sign in.')
+    if (result?.error) {
+      setError('Invalid email or password')
     }
+  }
+
+  const handleGoogleSignIn = () => {
+    signIn('google', { callbackUrl })
+  }
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-[84vh] flex items-center justify-center">
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    )
+  }
+
+  if (status === 'authenticated') {
+    return null
   }
 
   return (
     <div className="min-h-[84vh] flex flex-col lg:flex-row items-center justify-center gap-8 px-4">
       <div className="hidden lg:block">
-        <Image src={signupImage} alt="signup illustration" width={450} height={300} className="object-contain" />
+        <Image src={signupImage} alt="signin illustration" width={450} height={300} className="object-contain" />
       </div>
 
       <div className="w-full max-w-md bg-white border border-gray-200 rounded-xl shadow-sm p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Create your account</h1>
-        <p className="text-gray-500 text-sm mb-6">Join Banu Jobs and start your career journey</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Welcome back</h1>
+        <p className="text-gray-500 text-sm mb-6">Sign in to your Banu Jobs account</p>
 
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
@@ -60,25 +74,7 @@ export default function SignUp() {
           </div>
         )}
 
-        {success && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
-            {success}
-          </div>
-        )}
-
-        <form onSubmit={handleSignUp} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-            <input
-              type="text"
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
-              placeholder="John Doe"
-            />
-          </div>
-
+        <form onSubmit={handleSignIn} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input
@@ -96,11 +92,10 @@ export default function SignUp() {
             <input
               type="password"
               required
-              minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
-              placeholder="Min. 6 characters"
+              placeholder="Your password"
             />
           </div>
 
@@ -109,7 +104,7 @@ export default function SignUp() {
             disabled={loading}
             className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg transition-colors text-sm"
           >
-            {loading ? 'Creating account...' : 'Create Account'}
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
@@ -124,7 +119,7 @@ export default function SignUp() {
 
         <button
           type="button"
-          onClick={() => signIn('google', { callbackUrl: process.env.NEXT_PUBLIC_URL })}
+          onClick={handleGoogleSignIn}
           className="w-full py-2.5 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -137,9 +132,9 @@ export default function SignUp() {
         </button>
 
         <p className="text-center text-sm text-gray-500 mt-6">
-          Already have an account?{' '}
-          <a href="/signin" className="text-blue-600 hover:text-blue-700 font-medium">
-            Sign in
+          Don&apos;t have an account?{' '}
+          <a href="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
+            Sign up
           </a>
         </p>
       </div>

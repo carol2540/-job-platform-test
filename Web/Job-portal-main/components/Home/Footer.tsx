@@ -4,12 +4,9 @@ const Footer = () => {
     return (
         <div className='bg-black pt-10 pb-8'>
             <div className='w-[80%] mx-auto'>
-                {/* Divider */}
                 <div className='border-t border-white border-opacity-10 mb-6' />
 
-                {/* Bottom: Made with love + social links */}
                 <div className='flex flex-col md:flex-row items-center justify-between gap-4'>
-                    {/* Left: Made with love */}
                     <p className='text-sm text-gray-400'>
                         Made with{' '}
                         <span className='text-red-500'>❤</span>
@@ -17,9 +14,7 @@ const Footer = () => {
                         <span className='text-white font-medium'>Klaudius Banu</span>
                     </p>
 
-                    {/* Right: Social links */}
                     <div className='flex items-center gap-4'>
-                        {/* GitHub */}
                         <a
                             href='https://github.com/carol2540'
                             target='_blank'
@@ -38,7 +33,6 @@ const Footer = () => {
                             </svg>
                         </a>
 
-                        {/* LinkedIn */}
                         <a
                             href='https://id.linkedin.com/in/klaudiusbanu'
                             target='_blank'

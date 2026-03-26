@@ -6,23 +6,35 @@ import User from '../Helpers/User'
 
 const Nav = async () => {
     const session = await getServerSession(authOptions)
+    const isAdmin = (session?.user as { isAdmin?: boolean })?.isAdmin
+
     return (
         <div className='h-[13vh] shadow-md'>
             <div className='w-[90%] md-[80%] h-full mx-auto flex items-center justify-between'>
                 {/* Brand name */}
-                <div>
-                    <Link href='/'>
-                        <span className='text-xl md:text-2xl font-bold text-blue-700 hover:text-blue-900 transition-colors'>
+                <div className='flex items-center gap-4'>
+                    {isAdmin ? (
+                        <span className='text-xl md:text-2xl font-bold text-blue-700 cursor-default'>
                             Banu Job Platform
                         </span>
-                    </Link>
+                    ) : (
+                        <Link href='/'>
+                            <span className='text-xl md:text-2xl font-bold text-blue-700 hover:text-blue-900 transition-colors'>
+                                Banu Job Platform
+                            </span>
+                        </Link>
+                    )}
+                    {isAdmin && (
+                        <Link href='/admin/dashboard'>
+                            <span className='text-xs px-2 py-1 bg-red-600 text-white font-semibold rounded'>
+                                Admin
+                            </span>
+                        </Link>
+                    )}
                 </div>
                 <div className='flex space-x-2 items-center'>
-                    {/* <Image src={''} alt='user logo' /> */}
                     {!session && <Link href={'/signup'}><button className='px-4 py-1.5 text-[14px] sm:text-[16px] sm:px-6 sm:py-2 bg-blue-600 font-semibold text-white rounded-lg hover:bg-blue-800 transition-colors duration-300'>Sign up</button></Link>}
                     {session && <User session={session} />}
-
-                    {session && <button className='px-4 py-1.5 text-[14px] h-[3em] sm:text-[16px] sm:px-6 sm:py-2 bg-orange-600 hover:bg-orange-800  font-semibold text-white rounded-lg transition-colors duration-300'>Post a job</button>}
                 </div>
             </div>
         </div>

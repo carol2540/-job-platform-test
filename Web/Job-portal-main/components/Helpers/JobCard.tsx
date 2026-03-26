@@ -7,13 +7,18 @@ import { FaMapLocation, FaRegBookmark, } from 'react-icons/fa6'
 interface Props {
   job: Job
 }
+
+const PLACEHOLDER_IMAGE = '/images/c1.png'
+
 export const JobCard = ({ job }: Props) => {
+  const imageSrc = job.image || PLACEHOLDER_IMAGE
+
   return (
     <div className="relative transition-transform duration-300 hover:scale-105 border-gray-600 rounded-lg  border-2 border-opacity-20 p-1 md:p-2">
       <div className="flex items-center space-x-6">
         {/* Image */}
         <div>
-          <Image src={job.image} alt={job.title} width={50} height={50} className="object-cover" />
+          <Image src={imageSrc} alt={job.title} width={50} height={50} className="object-cover" />
         </div>
         {/* content */}
         <div>

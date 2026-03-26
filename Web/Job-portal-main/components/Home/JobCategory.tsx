@@ -3,7 +3,6 @@ import { Heading, JobCategoryCard } from '../../paths'
 const JobCategory = () => {
     return (
         <div className='pt-8 md:pt-20 pb-8 md:pb-12'>
-            {/* Heading */}
             <Heading mainHeading="Popular job categories" subHeading="2020 jobs live - 293 added today" />
 
             <div className="w-[80%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-4 gap-3 items-center">
