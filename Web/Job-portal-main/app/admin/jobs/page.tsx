@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { CreateJobDto, Job, JobStatus } from '@/types/job.types'
-import { createJob, deleteJob, getJobs, updateJob } from '@/lib/jobs'
 import JobFormModal from '@/components/Admin/JobFormModal'
 import JobStatusBadge from '@/components/Admin/JobStatusBadge'
+
+const API = '/api/jobs'
 
 const STATUS_FILTER_OPTIONS: Array<{ value: string; label: string }> = [
   { value: '', label: 'All Status' },
@@ -36,8 +37,11 @@ export default function AdminJobsPage() {
   const loadJobs = useCallback(async () => {
     setLoading(true)
     try {
-      const data = await getJobs()
+      const res = await fetch(API)
+      const data = await res.json()
       setJobs(data)
+    } catch (err) {
+      console.error('Failed to load jobs:', err)
     } finally {
       setLoading(false)
     }
@@ -62,16 +66,24 @@ export default function AdminJobsPage() {
 
   const handleSave = async (dto: CreateJobDto) => {
     if (editingJob) {
-      await updateJob(editingJob.id, dto)
+      await fetch(API, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: editingJob.id, ...dto }),
+      })
     } else {
-      await createJob(dto)
+      await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dto),
+      })
     }
     await loadJobs()
     router.refresh()
   }
 
   const handleDelete = async (id: number) => {
-    await deleteJob(id)
+    await fetch(`${API}?id=${id}`, { method: 'DELETE' })
     setDeleteConfirm(null)
     await loadJobs()
     router.refresh()

@@ -23,9 +23,9 @@ export default async function AdminDashboardPage() {
   const maxTypeCount = Math.max(...Object.values(jobsByType), 1)
   const typeEntries = Object.entries(jobsByType).sort((a, b) => b[1] - a[1])
 
-  const recentJobs = [...jobs]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 5)
+  const allJobs = [...jobs].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -102,15 +102,15 @@ export default async function AdminDashboardPage() {
 
       <div className="rounded-xl border border-gray-200 bg-white p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">Recent Job Posts</h2>
+          <h2 className="text-lg font-semibold text-gray-900">All Job Posts ({allJobs.length})</h2>
           <Link
             href="/admin/jobs"
             className="text-sm font-medium text-blue-600 hover:text-blue-800"
           >
-            View all
+            Manage all
           </Link>
         </div>
-        {recentJobs.length === 0 ? (
+        {allJobs.length === 0 ? (
           <p className="text-sm text-gray-500">No jobs yet.</p>
         ) : (
           <div className="overflow-x-auto">
@@ -126,7 +126,7 @@ export default async function AdminDashboardPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {recentJobs.map((job) => (
+                {allJobs.map((job) => (
                   <tr key={job.id} className="hover:bg-gray-50">
                     <td className="py-3 pr-4 font-medium text-gray-900">{job.title}</td>
                     <td className="py-3 pr-4 text-gray-600">{job.company}</td>

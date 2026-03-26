@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { CreateJobDto, Job, JobType, JobStatus } from '@/types/job.types'
 
 const JOB_TYPES: JobType[] = ['Full time', 'Internship', 'Contract']
-const STATUS_OPTIONS: JobStatus[] = ['draft', 'live', 'closed']
+const STATUS_OPTIONS: JobStatus[] = ['live', 'closed']
 
 interface Props {
   job?: Job | null
@@ -21,7 +21,7 @@ const emptyForm: CreateJobDto = {
   jobtype: 'Full time',
   description: '',
   tags: [],
-  status: 'draft',
+  status: 'live',
   startLiveDate: '',
   applicationDeadline: '',
 }
@@ -73,13 +73,18 @@ export default function JobFormModal({ job, onClose, onSave }: Props) {
     if (!form.title.trim()) { setError('Title is required.'); return }
     if (!form.company.trim()) { setError('Company is required.'); return }
     if (!form.location.trim()) { setError('Location is required.'); return }
+    if (form.applicationDeadline && form.startLiveDate && form.applicationDeadline <= form.startLiveDate) {
+      setError('Application deadline harus lebih satu hari dari start date.')
+      return
+    }
 
     setLoading(true)
     setError('')
     try {
       await onSave(form)
       onClose()
-    } catch {
+    } catch (err) {
+      console.error('Job save failed:', err)
       setError('Failed to save job. Please try again.')
     } finally {
       setLoading(false)
@@ -175,7 +180,7 @@ export default function JobFormModal({ job, onClose, onSave }: Props) {
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 {STATUS_OPTIONS.map((s) => (
-                  <option key={s} value={s} className="capitalize">{s}</option>
+                  <option key={s} value={s} className="capitalize">{s.charAt(0).toUpperCase() + s.slice(1)}</option>
                 ))}
               </select>
             </Field>
@@ -187,14 +192,20 @@ export default function JobFormModal({ job, onClose, onSave }: Props) {
                 type="date"
                 value={form.startLiveDate || ''}
                 onChange={(e) => setForm((f) => ({ ...f, startLiveDate: e.target.value }))}
+                min={new Date().toISOString().split('T')[0]}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </Field>
-            <Field label="Application Deadline">
+            <Field label="Application Deadline" hint="End date harus lebih satu hari dari start date">
               <input
                 type="date"
                 value={form.applicationDeadline || ''}
                 onChange={(e) => setForm((f) => ({ ...f, applicationDeadline: e.target.value }))}
+                min={form.startLiveDate ? (() => {
+                  const d = new Date(form.startLiveDate)
+                  d.setDate(d.getDate() + 1)
+                  return d.toISOString().split('T')[0]
+                })() : new Date().toISOString().split('T')[0]}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </Field>
