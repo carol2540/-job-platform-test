@@ -17,7 +17,7 @@ function getSupabase(): SupabaseClient | null {
 // Map a raw DB row to a Job object
 function toJob(row: Record<string, unknown>): Job {
   return {
-    id: row.id as number,
+    id: row.id as number | string,
     title: row.title as string,
     company: row.company as string,
     image: String(row.image ?? ''),
@@ -75,9 +75,24 @@ export async function getJobs(): Promise<Job[]> {
   return (data || []).map(toJob)
 }
 
-export async function getJob(id: number): Promise<Job | undefined> {
-  const jobs = await getJobs()
-  return jobs.find((j) => j.id === id)
+export async function getJob(id: number | string): Promise<Job | undefined> {
+  const sb = getSupabase()
+  if (!sb) {
+    const jobs = await getJobs()
+    return jobs.find((j) => j.id === id)
+  }
+
+  const { data, error } = await sb
+    .from('jobs')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error || !data) {
+    return undefined
+  }
+
+  return toJob(data as Record<string, unknown>)
 }
 
 export async function createJob(dto: CreateJobDto): Promise<Job> {

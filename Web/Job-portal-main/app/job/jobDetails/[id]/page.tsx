@@ -7,7 +7,7 @@ import React from 'react'
 import { FaBuilding, FaCalendarAlt } from 'react-icons/fa'
 
 const JobDeatils = async ({ params }: { params: { id: string } }) => {
-  const id = parseInt(params.id)
+  const id = params.id
   const getJobDetail = await getJob(id)
   const allJobs = await getJobs()
   const relatedJobs = allJobs.filter((job) => job.id !== id).slice(0, 4)

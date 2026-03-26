@@ -32,7 +32,7 @@ export default function AdminJobsPage() {
 
   const [showModal, setShowModal] = useState(false)
   const [editingJob, setEditingJob] = useState<Job | null>(null)
-  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null)
+  const [deleteConfirm, setDeleteConfirm] = useState<string | number | null>(null)
 
   const loadJobs = useCallback(async () => {
     setLoading(true)
@@ -82,7 +82,7 @@ export default function AdminJobsPage() {
     router.refresh()
   }
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string | number) => {
     await fetch(`${API}?id=${id}`, { method: 'DELETE' })
     setDeleteConfirm(null)
     await loadJobs()

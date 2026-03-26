@@ -2,7 +2,7 @@ export type JobType = 'Full time' | 'Internship' | 'Contract'
 export type JobStatus = 'draft' | 'live' | 'closed'
 
 export interface Job {
-  id: number
+  id: number | string
   title: string
   image: string
   salary: string
