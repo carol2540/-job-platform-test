@@ -1,15 +1,17 @@
-import JobData from '@/data'
 import { authOptions } from '@/Auth'
 import { ApplyButton, JobCard } from '@/paths'
 import { getServerSession } from 'next-auth'
+import { getJob, getJobs } from '@/lib/jobs'
 import Link from 'next/link'
 import React from 'react'
 import { FaBuilding, FaCalendarAlt } from 'react-icons/fa'
 
 const JobDeatils = async ({ params }: { params: { id: string } }) => {
-  const getJobDetail = JobData?.find((job) => job.id.toString() === params.id)
+  const id = parseInt(params.id)
+  const getJobDetail = await getJob(id)
+  const allJobs = await getJobs()
+  const relatedJobs = allJobs.filter((job) => job.id !== id).slice(0, 4)
   const session = await getServerSession(authOptions)
-  const relatedJobs = JobData?.filter((job) => job.id.toString() !== params.id).slice(0, 4)
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -90,29 +92,6 @@ const JobDeatils = async ({ params }: { params: { id: string } }) => {
               </span>
             ))}
           </div>
-        </div>
-
-        {/* Key Responsibilities */}
-        <div className='mb-10'>
-          <h2 className='text-xl font-semibold text-gray-800 mb-4'>Key Responsibilities</h2>
-          <ul className='space-y-2'>
-            <li className='flex items-start gap-2 text-gray-600'>
-              <span className='text-blue-600 mt-1'>•</span>
-              Design, develop, and maintain high-quality software solutions.
-            </li>
-            <li className='flex items-start gap-2 text-gray-600'>
-              <span className='text-blue-600 mt-1'>•</span>
-              Collaborate with cross-functional teams to define and ship new features.
-            </li>
-            <li className='flex items-start gap-2 text-gray-600'>
-              <span className='text-blue-600 mt-1'>•</span>
-              Write clean, maintainable, and well-tested code.
-            </li>
-            <li className='flex items-start gap-2 text-gray-600'>
-              <span className='text-blue-600 mt-1'>•</span>
-              Participate in code reviews and mentor junior team members.
-            </li>
-          </ul>
         </div>
 
         {/* Related Jobs */}
