@@ -10,6 +10,7 @@ import { JobCard } from "./components/Helpers/JobCard";
 import { ScrollToTop } from "./components/Helpers/ScrollToTop";
 import { ApplyButton } from "./components/Helpers/ApplyButton";
 import JobsList from "./components/Job/JobsList";
+import { JobCategoryCard } from "./components/Helpers/JobCategoryCard";
 
 export {
   Nav,
@@ -24,4 +25,5 @@ export {
   ScrollToTop,
   Footer,
   JobsList,
+  JobCategoryCard,
 };
